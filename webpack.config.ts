@@ -1,67 +1,27 @@
-import path from "path";
-import webpack from "webpack";
-import HtmlWebpackPlugin from "html-webpack-plugin";
-import MiniCssExtractPlugin from "mini-css-extract-plugin";
-import type { Configuration as DevServerConfiguration } from "webpack-dev-server";
+import path from 'path';
+import webpack from 'webpack';
 
-type Mode = "development" | "production";
+import { buildWebpack } from './config/build/buildWebpack';
+import { BuildMode, BuildPaths } from './config/build/types/types';
 
 interface envVars {
-  mode: Mode;
+  mode: BuildMode;
   port: number;
 }
 
 export default (env: envVars) => {
-  const isDev = env.mode === "development";
-
-  const config: webpack.Configuration = {
-    mode: env.mode ?? "development",
-    entry: {
-      main: path.resolve(__dirname, "src", "index.tsx"),
-    },
-    output: {
-      path: path.resolve(__dirname, "dist"),
-      filename: "[name].[contenthash].js",
-      clean: true,
-    },
-    plugins: [
-      new HtmlWebpackPlugin({
-        template: path.resolve(__dirname, "public", "index.html"),
-      }),
-      isDev && new webpack.ProgressPlugin(),
-      !isDev &&
-        new MiniCssExtractPlugin({
-          filename: "css/[name].[contenthash:8].css",
-          chunkFilename: "css/[name].[contenthash:8].css",
-        }),
-    ],
-    module: {
-      rules: [
-        {
-          test: /\.css$/i,
-          use: [
-            isDev ? "style-loader" : MiniCssExtractPlugin.loader,
-            "css-loader",
-          ],
-        },
-        {
-          test: /\.tsx?$/,
-          use: "ts-loader",
-          exclude: /node_modules/,
-        },
-      ],
-    },
-    resolve: {
-      extensions: [".tsx", ".ts", ".js"],
-    },
-    devtool: isDev && "inline-source-map",
-    devServer: isDev
-      ? {
-          port: env.port ?? 3000,
-          open: true,
-          historyApiFallback: true,
-        }
-      : undefined,
+  const paths: BuildPaths = {
+    entry: path.resolve(__dirname, 'src', 'index.tsx'),
+    output: path.resolve(__dirname, 'dist'),
+    html: path.resolve(__dirname, 'public', 'index.html'),
+    favicon: path.resolve(__dirname, 'public', 'favicon.svg'),
+    src: path.resolve(__dirname, 'src'),
   };
+
+  const config: webpack.Configuration = buildWebpack({
+    port: env.port ?? 3000,
+    mode: env.mode ?? 'development',
+    paths,
+  });
   return config;
 };
