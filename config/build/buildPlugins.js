@@ -1,18 +1,13 @@
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import webpack, { Configuration } from 'webpack';
+import webpack from 'webpack';
 
-import { BuildOptions } from './types/types';
-
-export const buildPlugins = ({
-  mode,
-  paths,
-}: BuildOptions): Configuration['plugins'] => {
+export const buildPlugins = ({ mode, paths }) => {
   const isDev = mode === 'development';
   const isProd = mode === 'production';
 
-  const plugins: Configuration['plugins'] = [
+  const plugins = [
     new HtmlWebpackPlugin({
       template: paths.html,
       favicon: paths.favicon,

@@ -1,16 +1,10 @@
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import ReactRefreshTypeScript from 'react-refresh-typescript';
-import { ModuleOptions } from 'webpack';
 
-import { BuildOptions } from './types/types';
-
-export const buildLoaders = ({
-  mode,
-}: BuildOptions): ModuleOptions['rules'] => {
+export const buildLoaders = ({ mode }) => {
   const isDev = mode === 'development';
 
   const assetLoader = {
-    test: /\.(png|jpg|jpeg|gif)$/i,
+    test: /\.(png|jpg|jpeg|gif|webp)$/i,
     type: 'asset/resource',
   };
 
@@ -41,21 +35,20 @@ export const buildLoaders = ({
     use: [isDev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader'],
   };
 
-  const tsLoader = {
-    test: /\.tsx?$/,
-    use: [
-      {
-        loader: 'ts-loader',
-        options: {
-          transpileOnly: true,
-          getCustomTransformers: () => ({
-            before: [isDev && ReactRefreshTypeScript()].filter(Boolean),
-          }),
-        },
-      },
-    ],
+  const jsLoader = {
+    test: /\.(js|jsx)$/,
     exclude: /node_modules/,
+    use: {
+      loader: 'babel-loader',
+      options: {
+        presets: [
+          '@babel/preset-env',
+          ['@babel/preset-react', { runtime: 'automatic' }],
+        ],
+        plugins: [isDev && 'react-refresh/babel'].filter(Boolean),
+      },
+    },
   };
 
-  return [assetLoader, svgrLoader, cssLoader, tsLoader];
+  return [assetLoader, svgrLoader, cssLoader, jsLoader];
 };

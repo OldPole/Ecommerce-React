@@ -4,7 +4,7 @@ import { Link, Outlet } from 'react-router-dom';
 import './App.css';
 
 const App = () => {
-  const [count, setCount] = useState<number>(0);
+  const [count, setCount] = useState(0);
 
   const increment = () => setCount(prev => prev + 1);
 
