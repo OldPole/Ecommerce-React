@@ -9,6 +9,7 @@ export const buildPlugins = ({ mode, paths }) => {
 
   const plugins = [
     new HtmlWebpackPlugin({
+      title: 'Ecommerce',
       template: paths.html,
       favicon: paths.favicon,
     }),
