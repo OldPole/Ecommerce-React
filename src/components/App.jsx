@@ -2,6 +2,7 @@ import Layout from '@/components/Layout';
 import { About } from '@/components/pages/About';
 import Categories from '@/components/pages/Categories/Categories';
 import Home from '@/components/pages/Home';
+import Signup from '@/components/pages/Signup';
 import React, { Suspense } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
@@ -26,6 +27,10 @@ const App = () => {
               <About />
             </Suspense>
           ),
+        },
+        {
+          path: '/signup',
+          element: <Signup />,
         },
       ],
     },
