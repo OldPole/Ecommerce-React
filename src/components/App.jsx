@@ -1,7 +1,8 @@
 import Layout from '@/components/Layout';
 import { About } from '@/components/pages/About';
-import Categories from '@/components/pages/Categories/Categories';
+import Categories from '@/components/pages/Categories';
 import Home from '@/components/pages/Home';
+import Login from '@/components/pages/Login/Login';
 import Signup from '@/components/pages/Signup';
 import React, { Suspense } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
@@ -31,6 +32,10 @@ const App = () => {
         {
           path: '/signup',
           element: <Signup />,
+        },
+        {
+          path: '/login',
+          element: <Login />,
         },
       ],
     },

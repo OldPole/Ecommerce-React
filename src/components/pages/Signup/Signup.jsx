@@ -6,7 +6,6 @@ const Signup = () => {
   return (
     <>
       <AppBreadcrumbs items={['Sign up']} />
-
       <SingupForm />
     </>
   );

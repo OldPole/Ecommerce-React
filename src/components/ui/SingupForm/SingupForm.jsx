@@ -10,10 +10,10 @@ import {
 import React, { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
-const SingupForm = () => {
+const SignupForm = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: '',
+    username: '',
     email: '',
     password: '',
     terms: false,
@@ -35,8 +35,8 @@ const SingupForm = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    if (formData.name.trim().length < 2)
-      newErrors.name = 'Name must be at least 2 characters';
+    if (formData.username.trim().length < 2)
+      newErrors.username = 'Username must be at least 2 characters';
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
       newErrors.email = 'Invalid email';
@@ -66,7 +66,7 @@ const SingupForm = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          firstName: formData.name,
+          username: formData.username,
           email: formData.email,
           password: formData.password,
         }),
@@ -88,23 +88,35 @@ const SingupForm = () => {
   };
 
   const isFormValid = () =>
-    formData.name.trim() &&
+    formData.username.trim() &&
     formData.email.trim() &&
     formData.password &&
     formData.terms;
 
   return (
     <Box sx={{ maxWidth: 400, mx: 'auto', mt: 4, p: 3 }}>
+      <Typography
+        variant="h4"
+        component="h1"
+        gutterBottom
+        sx={{
+          fontWeight: 600,
+          mb: 4,
+        }}
+      >
+        Sign up
+      </Typography>
       <form onSubmit={handleSubmit} noValidate>
         <TextField
           fullWidth
-          name="name"
-          value={formData.name}
+          name="username"
+          value={formData.username}
           onChange={handleChange}
-          error={!!errors.name}
-          helperText={errors.name}
-          label="Name"
+          error={!!errors.username}
+          helperText={errors.username}
+          label="Username"
           sx={{ mb: 3 }}
+          autoComplete="username"
         />
 
         <TextField
@@ -117,6 +129,7 @@ const SingupForm = () => {
           helperText={errors.email}
           label="Email"
           sx={{ mb: 3 }}
+          autoComplete="email"
         />
 
         <TextField
@@ -129,6 +142,7 @@ const SingupForm = () => {
           helperText={errors.password}
           label="Password"
           sx={{ mb: 2 }}
+          autoComplete="new-password"
         />
 
         <FormControlLabel
@@ -204,4 +218,4 @@ const SingupForm = () => {
   );
 };
 
-export default SingupForm;
+export default SignupForm;
