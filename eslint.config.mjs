@@ -1,8 +1,8 @@
 import js from '@eslint/js';
-import prettierConfig from 'eslint-config-prettier';
-import prettierPlugin from 'eslint-plugin-prettier';
-import pluginReactConfig from 'eslint-plugin-react/configs/recommended.js';
 import globals from 'globals';
+import prettierConfig from 'eslint-config-prettier';
+import pluginReactConfig from 'eslint-plugin-react/configs/recommended.js';
+import importPlugin from 'eslint-plugin-import';
 
 export default [
   { files: ['**/*.{js,mjs,cjs,jsx}'] },
@@ -19,16 +19,37 @@ export default [
   prettierConfig,
   {
     plugins: {
-      prettier: prettierPlugin,
+      import: importPlugin,
     },
     rules: {
-      'prettier/prettier': [
+      'react/prop-types': 0,
+      'import/order': [
         'error',
         {
-          endOfLine: 'auto',
+          groups: [
+            'builtin',
+            'external',
+            'internal',
+            ['parent', 'sibling', 'index'],
+          ],
+          pathGroups: [
+            {
+              pattern: 'react',
+              group: 'builtin',
+              position: 'before',
+            },
+            {
+              pattern: 'react-router',
+              group: 'builtin',
+              position: 'before',
+            },
+            {
+              pattern: '@/**',
+              group: 'internal',
+            },
+          ],
         },
       ],
-      'react/prop-types': 0,
     },
   },
 ];

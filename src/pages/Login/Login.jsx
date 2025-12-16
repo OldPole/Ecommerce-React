@@ -1,6 +1,7 @@
-import AppBreadcrumbs from '@/components/ui/AppBreadcrumbs';
-import LoginForm from '@/components/ui/LoginForm';
 import React from 'react';
+
+import AppBreadcrumbs from '@/components/AppBreadcrumbs';
+import LoginForm from '@/components/LoginForm';
 
 const Login = () => {
   return (

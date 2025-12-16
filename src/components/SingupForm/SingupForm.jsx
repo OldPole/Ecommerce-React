@@ -1,3 +1,5 @@
+import React, { useState } from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -7,11 +9,8 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React, { useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 const SignupForm = () => {
-  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -20,6 +19,8 @@ const SignupForm = () => {
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleChange = e => {
     const { name, value, type, checked } = e.target;

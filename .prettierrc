@@ -7,17 +7,5 @@
   "printWidth": 80,
   "tabWidth": 2,
   "arrowParens": "avoid",
-  "endOfLine": "lf",
-  "plugins": ["@ianvs/prettier-plugin-sort-imports"],
-  "importOrder": [
-    "^@core/(.*)$",
-    "",
-    "^@server/(.*)$",
-    "",
-    "^@ui/(.*)$",
-    "",
-    "^[./]"
-  ],
-  "importOrderParserPlugins": ["typescript", "jsx", "decorators-legacy"],
-  "importOrderTypeScriptVersion": "5.0.0"
+  "endOfLine": "lf"
 }
