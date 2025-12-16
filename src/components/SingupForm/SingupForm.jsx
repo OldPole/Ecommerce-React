@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useCallback } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 import {
   Box,
   Button,
@@ -10,89 +11,40 @@ import {
   Typography,
 } from '@mui/material';
 
-const SignupForm = () => {
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    terms: false,
-  });
-  const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+import { apiResources } from '@/utils/network';
 
+const SignupForm = () => {
   const navigate = useNavigate();
 
-  const handleChange = e => {
-    const { name, value, type, checked } = e.target;
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    watch,
+  } = useForm();
 
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
+  const onSubmit = useCallback(
+    async data => {
+      const user = await apiResources(
+        'https://dummyjson.com/users/add',
+        'POST',
+        {
+          username: data.username,
+          email: data.email,
+          password: data.password,
+        },
+      );
 
-    if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-
-    if (formData.username.trim().length < 2)
-      newErrors.username = 'Username must be at least 2 characters';
-
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
-      newErrors.email = 'Invalid email';
-
-    if (formData.password.length < 8)
-      newErrors.password = 'At least 8 characters';
-    else if (!/[a-z]/.test(formData.password))
-      newErrors.password = 'Need lowercase letter';
-    else if (!/[A-Z]/.test(formData.password))
-      newErrors.password = 'Need uppercase letter';
-    else if (!/[0-9]/.test(formData.password))
-      newErrors.password = 'Need number';
-    else if (!/[!@#$%^&*]/.test(formData.password))
-      newErrors.password = 'Need special character';
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async e => {
-    e.preventDefault();
-    if (!validateForm()) return;
-
-    setIsSubmitting(true);
-    try {
-      const response = await fetch('https://dummyjson.com/users/add', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          username: formData.username,
-          email: formData.email,
-          password: formData.password,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      if (user) {
+        navigate('/login');
+      } else {
+        console.error('Registration failed');
       }
+    },
+    [navigate],
+  );
 
-      const user = await response.json();
-      console.log('User created:', user);
-
-      navigate('/login');
-    } catch (error) {
-      console.error('Registration failed:', error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const isFormValid = () =>
-    formData.username.trim() &&
-    formData.email.trim() &&
-    formData.password &&
-    formData.terms;
+  const isTermsAccepted = watch('terms');
 
   return (
     <Box sx={{ maxWidth: 400, mx: 'auto', mt: 4, p: 3 }}>
@@ -100,48 +52,66 @@ const SignupForm = () => {
         variant="h4"
         component="h1"
         gutterBottom
-        sx={{
-          fontWeight: 600,
-          mb: 4,
-        }}
+        sx={{ fontWeight: 600, mb: 4 }}
       >
         Sign up
       </Typography>
-      <form onSubmit={handleSubmit} noValidate>
+      <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <TextField
           fullWidth
-          name="username"
-          value={formData.username}
-          onChange={handleChange}
-          error={!!errors.username}
-          helperText={errors.username}
+          {...register('username', {
+            required: 'Username is required',
+            minLength: {
+              value: 2,
+              message: 'Username must be at least 2 characters',
+            },
+          })}
           label="Username"
+          error={!!errors.username}
+          helperText={errors.username?.message}
           sx={{ mb: 3 }}
           autoComplete="username"
         />
 
         <TextField
           fullWidth
-          name="email"
-          type="email"
-          value={formData.email}
-          onChange={handleChange}
-          error={!!errors.email}
-          helperText={errors.email}
+          {...register('email', {
+            required: 'Email is required',
+            pattern: {
+              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+              message: 'Invalid email address',
+            },
+          })}
           label="Email"
+          type="email"
+          error={!!errors.email}
+          helperText={errors.email?.message}
           sx={{ mb: 3 }}
           autoComplete="email"
         />
 
         <TextField
           fullWidth
-          name="password"
-          type="password"
-          value={formData.password}
-          onChange={handleChange}
-          error={!!errors.password}
-          helperText={errors.password}
+          {...register('password', {
+            required: 'Password is required',
+            minLength: {
+              value: 8,
+              message: 'At least 8 characters',
+            },
+            validate: {
+              lowercase: value =>
+                /[a-z]/.test(value) || 'Need lowercase letter',
+              uppercase: value =>
+                /[A-Z]/.test(value) || 'Need uppercase letter',
+              number: value => /[0-9]/.test(value) || 'Need number',
+              specialChar: value =>
+                /[!@#$%^&*]/.test(value) || 'Need special character',
+            },
+          })}
           label="Password"
+          type="password"
+          error={!!errors.password}
+          helperText={errors.password?.message}
           sx={{ mb: 2 }}
           autoComplete="new-password"
         />
@@ -149,15 +119,13 @@ const SignupForm = () => {
         <FormControlLabel
           control={
             <Checkbox
-              name="terms"
-              checked={formData.terms}
-              onChange={handleChange}
+              {...register('terms', { required: 'You must accept the terms' })}
               sx={{ '&.Mui-checked': { color: '#000' } }}
             />
           }
           label={
             <Typography variant="body2" color="text.secondary">
-              By Creating An Account You Agree With Our{' '}
+              By creating an account, you agree with our{' '}
               <Link
                 component={RouterLink}
                 to="/terms"
@@ -181,12 +149,17 @@ const SignupForm = () => {
           }
           sx={{ mt: 2, mb: 1 }}
         />
+        {errors.terms && (
+          <Typography color="error" sx={{ mb: 2 }}>
+            {errors.terms.message}
+          </Typography>
+        )}
 
         <Button
           type="submit"
           fullWidth
           variant="contained"
-          disabled={isSubmitting || !isFormValid()}
+          disabled={isSubmitting || !isTermsAccepted}
           sx={{
             mt: 3,
             py: 1.5,

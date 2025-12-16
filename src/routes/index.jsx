@@ -6,6 +6,8 @@ import Categories from '@/pages/Categories';
 import Home from '@/pages/Home';
 import Login from '@/pages/Login';
 import Signup from '@/pages/Signup';
+import ForgotPassword from '@/pages/ForgotPassword';
+import Reset from '@/pages/Reset';
 
 export const AppRoutes = {
   default: '/',
@@ -13,6 +15,8 @@ export const AppRoutes = {
   about: '/about',
   signup: '/signup',
   login: '/login',
+  reset: '/reset',
+  forgotpassword: '/forgotpassword',
 };
 
 const routes = [
@@ -43,6 +47,14 @@ const routes = [
       {
         path: AppRoutes.login,
         element: <Login />,
+      },
+      {
+        path: AppRoutes.forgotpassword,
+        element: <ForgotPassword />,
+      },
+      {
+        path: AppRoutes.reset,
+        element: <Reset />,
       },
     ],
   },

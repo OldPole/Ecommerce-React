@@ -1,4 +1,4 @@
-export async function interactApiResources(url, method = 'GET', data = null) {
+export async function apiResources(url, method = 'GET', data = null) {
   try {
     const options = {
       method,

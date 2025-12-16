@@ -1,62 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 import { Box, Button, Link, TextField, Typography } from '@mui/material';
+import { apiResources } from '@/utils/network';
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    username: '',
-    password: '',
-  });
-  const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleChange = e => {
-    const { name, value } = e.target;
+  const [loginError, setLoginError] = useState('');
 
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm();
 
-  const handleSubmit = async e => {
-    e.preventDefault();
+  const onSubmit = useCallback(
+    async data => {
+      const user = await apiResources(
+        'https://dummyjson.com/auth/login',
+        'POST',
+        data,
+      );
 
-    setIsSubmitting(true);
-
-    try {
-      const response = await fetch('https://dummyjson.com/auth/login', {
-        // вынести в отдельную api.js
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          username: formData.username,
-          password: formData.password,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Login failed! status: ${response.status}`);
+      if (user) {
+        console.log('Login successful:', user);
+        localStorage.setItem('token', user.token);
+        navigate('/');
+      } else {
+        setLoginError('Invalid username or password');
+        console.error('Login failed: Invalid username or password');
       }
-
-      const user = await response.json();
-      console.log('Login successful:', user);
-
-      localStorage.setItem('token', user.token);
-
-      navigate('/');
-    } catch (error) {
-      console.error('Login failed:', error);
-      setErrors({
-        password: 'Invalid username or password',
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const isFormValid = () => formData.username.trim() && formData.password;
+    },
+    [navigate],
+  );
 
   return (
     <Box
@@ -79,27 +56,35 @@ const LoginForm = () => {
         Log in
       </Typography>
 
-      <form onSubmit={handleSubmit} noValidate style={{ width: '100%' }}>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+        style={{ width: '100%' }}
+      >
         <TextField
           fullWidth
-          name="username"
-          value={formData.username}
-          onChange={handleChange}
+          {...register('username', { required: 'Username is required' })}
           label="Username"
           sx={{ mb: 3 }}
+          error={!!errors.username}
+          helperText={errors.username ? errors.username.message : ''}
         />
 
         <TextField
           fullWidth
-          name="password"
-          type="password"
-          value={formData.password}
-          onChange={handleChange}
-          error={!!errors.password}
-          helperText={errors.password}
+          {...register('password', { required: 'Password is required' })}
           label="Password"
+          type="password"
           sx={{ mb: 3 }}
+          error={!!errors.password}
+          helperText={errors.password ? errors.password.message : ''}
         />
+
+        {loginError && (
+          <Typography color="error" sx={{ mb: 2 }}>
+            {loginError}
+          </Typography>
+        )}
 
         <Box
           sx={{
@@ -111,7 +96,7 @@ const LoginForm = () => {
           <Link
             variant="body2"
             component={RouterLink}
-            to="/forgot-password"
+            to="/forgotpassword"
             underline="hover"
             sx={{
               color: 'text.secondary',
@@ -125,7 +110,7 @@ const LoginForm = () => {
           type="submit"
           fullWidth
           variant="contained"
-          disabled={isSubmitting || !isFormValid()}
+          disabled={isSubmitting}
           sx={{
             py: 1.5,
             mb: 3,
