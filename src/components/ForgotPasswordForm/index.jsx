@@ -15,7 +15,7 @@ const ForgotPasswordForm = () => {
   const onSubmit = data => {
     const email = data.email;
     console.log(email);
-    navigate('/reset');
+    navigate('/resetpassword');
   };
 
   return (
@@ -43,7 +43,6 @@ const ForgotPasswordForm = () => {
           error={!!errors.email}
           helperText={errors.email?.message}
           sx={{ mb: 3 }}
-          autoComplete="email"
         />
 
         <Button

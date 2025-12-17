@@ -1,14 +1,14 @@
 import React from 'react';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs';
-import ResetForm from '@/components/ResetForm';
+import ResetPasswordForm from '@/components/ResetPasswordForm';
 
-const Reset = () => {
+const ResetPassword = () => {
   return (
     <>
       <AppBreadcrumbs items={['Reset Password']} />
-      <ResetForm />
+      <ResetPasswordForm />
     </>
   );
 };
 
-export default Reset;
+export default ResetPassword;

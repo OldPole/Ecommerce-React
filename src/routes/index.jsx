@@ -2,20 +2,22 @@ import React, { Suspense } from 'react';
 
 import Layout from '@/layouts/Layout';
 import { About } from '@/pages/About';
-import Categories from '@/pages/Categories';
+import Products from '@/pages/Products';
+import ProductDetail from '@/pages/ProductDetail';
 import Home from '@/pages/Home';
 import Login from '@/pages/Login';
 import Signup from '@/pages/Signup';
 import ForgotPassword from '@/pages/ForgotPassword';
-import Reset from '@/pages/Reset';
+import ResetPassword from '@/pages/ResetPassword';
 
 export const AppRoutes = {
   default: '/',
-  categories: '/categories',
+  products: '/products',
+  productdetail: '/product/:id',
   about: '/about',
   signup: '/signup',
   login: '/login',
-  reset: '/reset',
+  resetpassword: '/resetpassword',
   forgotpassword: '/forgotpassword',
 };
 
@@ -29,8 +31,12 @@ const routes = [
         element: <Home />,
       },
       {
-        path: AppRoutes.categories,
-        element: <Categories />,
+        path: AppRoutes.products,
+        element: <Products />,
+      },
+      {
+        path: AppRoutes.productdetail,
+        element: <ProductDetail />,
       },
       {
         path: AppRoutes.about,
@@ -53,8 +59,8 @@ const routes = [
         element: <ForgotPassword />,
       },
       {
-        path: AppRoutes.reset,
-        element: <Reset />,
+        path: AppRoutes.resetpassword,
+        element: <ResetPassword />,
       },
     ],
   },

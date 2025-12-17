@@ -21,12 +21,7 @@ const ResetPasswordForm = () => {
 
   return (
     <Box sx={{ maxWidth: 400, mx: 'auto', mt: 4, p: 3 }}>
-      <Typography
-        variant="h4"
-        component="h1"
-        gutterBottom
-        sx={{ fontWeight: 600, mb: 4 }}
-      >
+      <Typography variant="h4" gutterBottom sx={{ fontWeight: 600, mb: 4 }}>
         Reset Password
       </Typography>
       <form
@@ -48,7 +43,6 @@ const ResetPasswordForm = () => {
           error={!!errors.newPassword}
           helperText={errors.newPassword?.message}
           sx={{ mb: 3 }}
-          autoComplete="new-password"
         />
 
         <TextField
@@ -63,7 +57,6 @@ const ResetPasswordForm = () => {
           error={!!errors.confirmPassword}
           helperText={errors.confirmPassword?.message}
           sx={{ mb: 2 }}
-          autoComplete="new-password"
         />
 
         <Button
