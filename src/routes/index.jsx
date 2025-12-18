@@ -9,6 +9,7 @@ import Login from '@/pages/Login';
 import Signup from '@/pages/Signup';
 import ForgotPassword from '@/pages/ForgotPassword';
 import ResetPassword from '@/pages/ResetPassword';
+import NotFoundPage from '@/pages/NotFoundPage';
 
 export const AppRoutes = {
   default: '/',
@@ -19,6 +20,7 @@ export const AppRoutes = {
   login: '/login',
   resetpassword: '/resetpassword',
   forgotpassword: '/forgotpassword',
+  notfound: '*',
 };
 
 const routes = [
@@ -61,6 +63,10 @@ const routes = [
       {
         path: AppRoutes.resetpassword,
         element: <ResetPassword />,
+      },
+      {
+        path: AppRoutes.notfound,
+        element: <NotFoundPage />,
       },
     ],
   },
