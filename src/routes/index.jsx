@@ -64,11 +64,11 @@ const routes = [
         path: AppRoutes.resetpassword,
         element: <ResetPassword />,
       },
-      {
-        path: AppRoutes.notfound,
-        element: <NotFoundPage />,
-      },
     ],
+  },
+  {
+    path: AppRoutes.notfound,
+    element: <NotFoundPage />,
   },
 ];
 

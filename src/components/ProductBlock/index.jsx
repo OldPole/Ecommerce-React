@@ -5,7 +5,7 @@ import React from 'react';
 
 const ProductBlock = ({ id, title, price, images }) => {
   return (
-    <Grid item xs={12} sm={6} md={4} lg={3}>
+    <Grid>
       <Link
         component={RouterLink}
         to={`/product/${id}`}

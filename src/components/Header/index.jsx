@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Person, Search, ShoppingCart } from '@mui/icons-material';
-import ShopIcon from '@mui/icons-material/Shop';
 import {
   AppBar,
   Badge,
@@ -12,8 +11,9 @@ import {
   InputAdornment,
   TextField,
   Toolbar,
-  Typography,
 } from '@mui/material';
+
+import HomeLink from '@/elements/HomeLink';
 
 const Header = () => {
   return (
@@ -24,24 +24,7 @@ const Header = () => {
       >
         <Toolbar sx={{ justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Box
-              component={RouterLink}
-              to={'/'}
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 2,
-                color: 'black',
-                textDecoration: 'none',
-              }}
-            >
-              <ShopIcon fontSize="large" />
-
-              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                Ecommerce
-              </Typography>
-            </Box>
-
+            <HomeLink />
             <Box sx={{ ml: 4, display: 'flex', gap: 1 }}>
               <Button component={RouterLink} to="/" color="inherit">
                 Home
