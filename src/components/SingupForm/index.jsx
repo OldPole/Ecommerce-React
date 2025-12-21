@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import {
@@ -11,38 +11,34 @@ import {
   Typography,
 } from '@mui/material';
 
-import { apiResources } from '@/utils/network';
+import { useRegisterMutation } from '@/api/authApi';
 
 const SignupForm = () => {
   const navigate = useNavigate();
+  const [registerUser, { isLoading }] = useRegisterMutation();
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     watch,
   } = useForm();
 
-  const onSubmit = useCallback(
-    async data => {
-      const user = await apiResources(
-        'https://dummyjson.com/users/add',
-        'POST',
-        {
-          username: data.username,
-          email: data.email,
-          password: data.password,
-        },
-      );
+  const onSubmit = async data => {
+    try {
+      const result = await registerUser({
+        username: data.username,
+        email: data.email,
+        password: data.password,
+      }).unwrap();
 
-      if (user) {
-        navigate('/login');
-      } else {
-        console.error('Registration failed');
-      }
-    },
-    [navigate],
-  );
+      console.log('Registration success:', result);
+
+      navigate('/login');
+    } catch (err) {
+      console.error(err.data?.message || 'Registration failed.');
+    }
+  };
 
   const isTermsAccepted = watch('terms');
 
@@ -159,7 +155,7 @@ const SignupForm = () => {
           type="submit"
           fullWidth
           variant="contained"
-          disabled={isSubmitting || !isTermsAccepted}
+          disabled={isLoading || !isTermsAccepted}
           sx={{
             mt: 3,
             py: 1.5,
@@ -168,7 +164,7 @@ const SignupForm = () => {
             '&:hover': { bgcolor: '#333' },
           }}
         >
-          {isSubmitting ? 'Creating...' : 'Create Account'}
+          {isLoading ? 'Creating...' : 'Create Account'}
         </Button>
       </form>
 

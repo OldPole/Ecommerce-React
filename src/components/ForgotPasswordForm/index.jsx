@@ -14,8 +14,11 @@ const ForgotPasswordForm = () => {
 
   const onSubmit = data => {
     const email = data.email;
+
     console.log(email);
-    navigate('/resetpassword');
+    const fakeServerToken = '123';
+
+    navigate(`/resetpassword/${fakeServerToken}`);
   };
 
   return (

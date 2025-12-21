@@ -11,7 +11,7 @@ const Products = () => {
   const currentPage = parseInt(searchParams.get('page')) || 1;
   const limit = 9;
 
-  const { data } = useGetProductsQuery({
+  const { data, isLoading } = useGetProductsQuery({
     page: currentPage,
     limit,
   });
@@ -40,7 +40,7 @@ const Products = () => {
       <AppBreadcrumbs items={['Products']} />
       <Container fixed>
         <Grid container spacing={5} sx={{ py: 5 }} justifyContent="center">
-          {productsList.length ? productsList : skeletonList}
+          {isLoading ? skeletonList : productsList}
         </Grid>
 
         <Pagination

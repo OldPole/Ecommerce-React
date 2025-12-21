@@ -1,14 +1,14 @@
 import React, { Suspense } from 'react';
 
 import Layout from '@/layouts/Layout';
-import { About } from '@/pages/About';
-import Products from '@/pages/Products';
+import { Products } from '@/pages/Products';
 import ProductDetail from '@/pages/ProductDetail';
 import Home from '@/pages/Home';
 import Login from '@/pages/Login';
 import Signup from '@/pages/Signup';
 import ForgotPassword from '@/pages/ForgotPassword';
 import ResetPassword from '@/pages/ResetPassword';
+import { Account } from '@/pages/Account';
 import NotFoundPage from '@/pages/NotFoundPage';
 
 export const AppRoutes = {
@@ -18,8 +18,9 @@ export const AppRoutes = {
   about: '/about',
   signup: '/signup',
   login: '/login',
-  resetpassword: '/resetpassword',
+  resetpassword: '/resetpassword/:token',
   forgotpassword: '/forgotpassword',
+  account: '/account',
   notfound: '*',
 };
 
@@ -34,19 +35,15 @@ const routes = [
       },
       {
         path: AppRoutes.products,
-        element: <Products />,
+        element: (
+          <Suspense fallback={'Loading...'}>
+            <Products />
+          </Suspense>
+        ),
       },
       {
         path: AppRoutes.productdetail,
         element: <ProductDetail />,
-      },
-      {
-        path: AppRoutes.about,
-        element: (
-          <Suspense fallback={'Loading...'}>
-            <About />
-          </Suspense>
-        ),
       },
       {
         path: AppRoutes.signup,
@@ -63,6 +60,14 @@ const routes = [
       {
         path: AppRoutes.resetpassword,
         element: <ResetPassword />,
+      },
+      {
+        path: AppRoutes.account,
+        element: (
+          <Suspense fallback={'Loading...'}>
+            <Account />
+          </Suspense>
+        ),
       },
     ],
   },

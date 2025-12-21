@@ -1,39 +1,35 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { Box, Button, Link, TextField, Typography } from '@mui/material';
-import { apiResources } from '@/utils/network';
+
+import { useLoginMutation } from '@/api/authApi';
 
 const LoginForm = () => {
   const navigate = useNavigate();
-
+  const [login, { isLoading }] = useLoginMutation();
   const [loginError, setLoginError] = useState('');
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm();
 
-  const onSubmit = useCallback(
-    async data => {
-      const user = await apiResources(
-        'https://dummyjson.com/auth/login',
-        'POST',
-        data,
-      );
+  const onSubmit = async data => {
+    try {
+      setLoginError('');
 
-      if (user) {
-        console.log('Login successful:', user);
+      const user = await login(data).unwrap();
+
+      if (user?.token) {
         localStorage.setItem('token', user.token);
-        navigate('/');
-      } else {
-        setLoginError('Invalid username or password');
-        console.error('Login failed: Invalid username or password');
+        navigate('/account');
       }
-    },
-    [navigate],
-  );
+    } catch (err) {
+      setLoginError(err.data?.message || 'Invalid username or password');
+    }
+  };
 
   return (
     <Box
@@ -110,7 +106,7 @@ const LoginForm = () => {
           type="submit"
           fullWidth
           variant="contained"
-          disabled={isSubmitting}
+          disabled={isLoading}
           sx={{
             py: 1.5,
             mb: 3,
@@ -120,7 +116,7 @@ const LoginForm = () => {
             fontWeight: 600,
           }}
         >
-          {isSubmitting ? 'Logging in...' : 'Login'}
+          {isLoading ? 'Logging in...' : 'Login'}
         </Button>
       </form>
 

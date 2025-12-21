@@ -29,7 +29,11 @@ const Header = () => {
               <Button component={RouterLink} to="/" color="inherit">
                 Home
               </Button>
-              <Button component={RouterLink} to="/products" color="inherit">
+              <Button
+                component={RouterLink}
+                to="/products?page=1"
+                color="inherit"
+              >
                 Products
               </Button>
             </Box>

@@ -1,9 +1,10 @@
 import React from 'react';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import { useParams, useNavigate, Link as RouterLink } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { Button, TextField, Typography, Box, Link } from '@mui/material';
 
 const ResetPasswordForm = () => {
+  const { token } = useParams();
   const navigate = useNavigate();
 
   const {
@@ -14,8 +15,15 @@ const ResetPasswordForm = () => {
   } = useForm();
 
   const onSubmit = data => {
-    const { newPassword } = data;
-    console.log(newPassword);
+    const payload = {
+      token,
+      newPassword: data.newPassword,
+    };
+
+    // await resetPassword(payload).unwrap();
+
+    console.log(payload);
+
     navigate('/login');
   };
 

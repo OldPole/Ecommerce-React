@@ -31,6 +31,7 @@ const Footer = () => {
           }}
         >
           <HomeLink />
+
           <Box sx={{ display: 'flex', gap: 1, marginTop: 1 }}>
             <IconButton href="#" aria-label="Facebook">
               <FacebookIcon />
@@ -122,7 +123,7 @@ const Footer = () => {
             Shop
           </Typography>
           <RouterLink
-            to="/profile"
+            to="/account"
             style={{ textDecoration: 'none', margin: '5px 0' }}
             sx={{
               '&:hover': {
@@ -141,7 +142,7 @@ const Footer = () => {
             </Typography>
           </RouterLink>
           <RouterLink
-            to="/products"
+            to="/products?page=1"
             style={{ textDecoration: 'none', margin: '5px 0' }}
             sx={{
               '&:hover': {

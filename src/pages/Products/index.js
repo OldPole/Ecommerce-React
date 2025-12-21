@@ -1,1 +1,1 @@
-export { default } from './Products';
+export { lazyProducts as Products } from './Products.lazy';
