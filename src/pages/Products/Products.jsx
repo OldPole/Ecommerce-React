@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Grid, Container, Pagination, Box, Typography } from '@mui/material';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs';
 import ProductBlock from '@/components/ProductBlock';
@@ -21,14 +22,16 @@ const useDebounce = (value, delay) => {
 };
 
 const Products = () => {
-  const [filters, setFilters] = useState({
-    search: '',
-    category: '',
-    sortBy: '',
-    order: '',
-    page: 1,
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const filters = {
+    search: searchParams.get('search') || '',
+    category: searchParams.get('category') || '',
+    sortBy: searchParams.get('sortBy') || '',
+    order: searchParams.get('order') || '',
+    page: parseInt(searchParams.get('page')) || 1,
     limit: 9,
-  });
+  };
 
   const debouncedSearch = useDebounce(filters.search, 500);
 
@@ -41,13 +44,28 @@ const Products = () => {
   const products = data?.products || [];
   const totalCount = data?.total || 0;
 
-  const handleFilterChange = useCallback(newValues => {
-    setFilters(prev => ({ ...prev, ...newValues }));
-  }, []);
+  const handleFilterChange = useCallback(
+    newValues => {
+      const params = Object.fromEntries(searchParams.entries());
+
+      const updated = { ...params, ...newValues };
+
+      if (newValues.search !== undefined || newValues.category !== undefined) {
+        updated.page = '1';
+      }
+
+      Object.keys(updated).forEach(key => {
+        if (!updated[key]) delete updated[key];
+      });
+
+      setSearchParams(updated);
+    },
+    [searchParams, setSearchParams],
+  );
 
   const handlePageChange = useCallback(
     (_, value) => {
-      handleFilterChange({ page: value });
+      handleFilterChange({ page: value.toString() });
       window.scrollTo({ top: 0, behavior: 'smooth' });
     },
     [handleFilterChange],
@@ -58,6 +76,7 @@ const Products = () => {
       <AppBreadcrumbs items={['Products']} />
       <Container fixed sx={{ pb: 8 }}>
         <ProductToolbar filters={filters} onFilterChange={handleFilterChange} />
+
         <Grid container spacing={4} justifyContent="center">
           {isLoading ? (
             [...Array(filters.limit)].map((_, i) => (
