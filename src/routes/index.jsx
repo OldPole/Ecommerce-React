@@ -1,24 +1,23 @@
-import React, { Suspense } from 'react';
+import React, { lazy, Suspense } from 'react';
 
 import Layout from '@/layouts/Layout';
-import { Products } from '@/pages/Products';
-import ProductDetail from '@/pages/ProductDetail';
-import Home from '@/pages/Home';
-import Login from '@/pages/Login';
-import Signup from '@/pages/Signup';
-import ForgotPassword from '@/pages/ForgotPassword';
-import ResetPassword from '@/pages/ResetPassword';
-import { Account } from '@/pages/Account';
-import NotFoundPage from '@/pages/NotFoundPage';
-
 import PublicRoute from '@/routes/PublicRoute';
 import PrivateRoute from '@/routes/PrivateRoute';
+
+const Home = lazy(() => import('@/pages/Home'));
+const Products = lazy(() => import('@/pages/Products'));
+const ProductDetail = lazy(() => import('@/pages/ProductDetail'));
+const Login = lazy(() => import('@/pages/Login'));
+const Signup = lazy(() => import('@/pages/Signup'));
+const ForgotPassword = lazy(() => import('@/pages/ForgotPassword'));
+const ResetPassword = lazy(() => import('@/pages/ResetPassword'));
+const Account = lazy(() => import('@/pages/Account'));
+const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 
 export const AppRoutes = {
   default: '/',
   products: '/products',
   productdetail: '/product/:id',
-  about: '/about',
   signup: '/signup',
   login: '/login',
   resetpassword: '/resetpassword/:token',
@@ -30,19 +29,19 @@ export const AppRoutes = {
 const routes = [
   {
     path: AppRoutes.default,
-    element: <Layout />,
+    element: (
+      <Suspense fallback="Loading...">
+        <Layout />
+      </Suspense>
+    ),
     children: [
       {
-        index: AppRoutes.default,
+        index: true,
         element: <Home />,
       },
       {
         path: AppRoutes.products,
-        element: (
-          <Suspense fallback={'Loading...'}>
-            <Products />
-          </Suspense>
-        ),
+        element: <Products />,
       },
       {
         path: AppRoutes.productdetail,
@@ -62,11 +61,7 @@ const routes = [
         children: [
           {
             path: AppRoutes.account,
-            element: (
-              <Suspense fallback={'Loading...'}>
-                <Account />
-              </Suspense>
-            ),
+            element: <Account />,
           },
         ],
       },
@@ -74,7 +69,11 @@ const routes = [
   },
   {
     path: AppRoutes.notfound,
-    element: <NotFoundPage />,
+    element: (
+      <Suspense fallback="Loading...">
+        <NotFoundPage />
+      </Suspense>
+    ),
   },
 ];
 
