@@ -11,6 +11,9 @@ import ResetPassword from '@/pages/ResetPassword';
 import { Account } from '@/pages/Account';
 import NotFoundPage from '@/pages/NotFoundPage';
 
+import PublicRoute from '@/routes/PublicRoute';
+import PrivateRoute from '@/routes/PrivateRoute';
+
 export const AppRoutes = {
   default: '/',
   products: '/products',
@@ -46,28 +49,26 @@ const routes = [
         element: <ProductDetail />,
       },
       {
-        path: AppRoutes.signup,
-        element: <Signup />,
+        element: <PublicRoute />,
+        children: [
+          { path: AppRoutes.login, element: <Login /> },
+          { path: AppRoutes.signup, element: <Signup /> },
+          { path: AppRoutes.forgotpassword, element: <ForgotPassword /> },
+          { path: AppRoutes.resetpassword, element: <ResetPassword /> },
+        ],
       },
       {
-        path: AppRoutes.login,
-        element: <Login />,
-      },
-      {
-        path: AppRoutes.forgotpassword,
-        element: <ForgotPassword />,
-      },
-      {
-        path: AppRoutes.resetpassword,
-        element: <ResetPassword />,
-      },
-      {
-        path: AppRoutes.account,
-        element: (
-          <Suspense fallback={'Loading...'}>
-            <Account />
-          </Suspense>
-        ),
+        element: <PrivateRoute />,
+        children: [
+          {
+            path: AppRoutes.account,
+            element: (
+              <Suspense fallback={'Loading...'}>
+                <Account />
+              </Suspense>
+            ),
+          },
+        ],
       },
     ],
   },

@@ -1,22 +1,25 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQuery } from './config';
-import { API_ENDPOINTS } from './api';
 
 export const productsApi = createApi({
-  baseQuery,
   reducerPath: 'productsApi',
-  endpoints: build => ({
-    getProducts: build.query({
-      query: ({ page = 1, limit = 9 }) => {
-        const skip = (page - 1) * limit;
-        return `${API_ENDPOINTS.PRODUCTS}?limit=${limit}&skip=${skip}`;
+  baseQuery: baseQuery,
+  endpoints: builder => ({
+    getCategories: builder.query({
+      query: () => 'products/category-list',
+    }),
+    getProducts: builder.query({
+      query: ({ search, category, sortBy, order, limit, skip }) => {
+        let queryStr = `limit=${limit}&skip=${skip}`;
+        if (sortBy) queryStr += `&sortBy=${sortBy}&order=${order || 'asc'}`;
+
+        if (search) return `products/search?q=${search}&${queryStr}`;
+        if (category) return `products/category/${category}?${queryStr}`;
+
+        return `products?${queryStr}`;
       },
-      transformResponse: response => ({
-        products: response.products || [],
-        total: response.total || 0,
-      }),
     }),
   }),
 });
 
-export const { useGetProductsQuery } = productsApi;
+export const { useGetProductsQuery, useGetCategoriesQuery } = productsApi;

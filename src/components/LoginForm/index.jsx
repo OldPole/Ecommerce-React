@@ -22,12 +22,12 @@ const LoginForm = () => {
 
       const user = await login(data).unwrap();
 
-      if (user?.token) {
-        localStorage.setItem('token', user.token);
+      if (user.accessToken) {
+        localStorage.setItem('token', user.accessToken);
         navigate('/account');
       }
     } catch (err) {
-      setLoginError(err.data?.message || 'Invalid username or password');
+      setLoginError(err.data.message || 'Invalid username or password');
     }
   };
 
@@ -49,7 +49,7 @@ const LoginForm = () => {
           mb: 4,
         }}
       >
-        Log in
+        Login
       </Typography>
 
       <form

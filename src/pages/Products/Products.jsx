@@ -1,58 +1,110 @@
-import React, { useCallback } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { Grid, Container, Pagination } from '@mui/material';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Grid, Container, Pagination, Box, Typography } from '@mui/material';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs';
 import ProductBlock from '@/components/ProductBlock';
 import SkeletonProduct from '@/components/ProductBlock/Skeleton';
+import ProductToolbar from '@/components/ProductToolbar';
 import { useGetProductsQuery } from '@/api/productsApi';
 
+const useDebounce = (value, delay) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+
+  return debouncedValue;
+};
+
 const Products = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const currentPage = parseInt(searchParams.get('page')) || 1;
-  const limit = 9;
+  const [filters, setFilters] = useState({
+    search: '',
+    category: '',
+    sortBy: '',
+    order: '',
+    page: 1,
+    limit: 9,
+  });
+
+  const debouncedSearch = useDebounce(filters.search, 500);
 
   const { data, isLoading } = useGetProductsQuery({
-    page: currentPage,
-    limit,
+    ...filters,
+    search: debouncedSearch,
+    skip: (filters.page - 1) * filters.limit,
   });
 
   const products = data?.products || [];
-  const totalProducts = data?.total || 194;
+  const totalCount = data?.total || 0;
+
+  const handleFilterChange = useCallback(newValues => {
+    setFilters(prev => ({ ...prev, ...newValues }));
+  }, []);
 
   const handlePageChange = useCallback(
-    (event, value) => {
-      setSearchParams({ page: value.toString() });
+    (_, value) => {
+      handleFilterChange({ page: value });
       window.scrollTo({ top: 0, behavior: 'smooth' });
     },
-    [setSearchParams],
+    [handleFilterChange],
   );
-
-  const productsList = products.map(props => (
-    <ProductBlock key={props.id} {...props} />
-  ));
-
-  const skeletonList = [...Array(limit)].map((_, index) => (
-    <SkeletonProduct key={index} />
-  ));
 
   return (
     <>
       <AppBreadcrumbs items={['Products']} />
-      <Container fixed>
-        <Grid container spacing={5} sx={{ py: 5 }} justifyContent="center">
-          {isLoading ? skeletonList : productsList}
+      <Container fixed sx={{ pb: 8 }}>
+        <ProductToolbar filters={filters} onFilterChange={handleFilterChange} />
+        <Grid container spacing={4} justifyContent="center">
+          {isLoading ? (
+            [...Array(filters.limit)].map((_, i) => (
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                md={4}
+                key={i}
+                sx={{ display: 'flex', justifyContent: 'center' }}
+              >
+                <SkeletonProduct />
+              </Grid>
+            ))
+          ) : products.length > 0 ? (
+            products.map(product => (
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                md={4}
+                key={product.id}
+                sx={{ display: 'flex', justifyContent: 'center' }}
+              >
+                <ProductBlock {...product} />
+              </Grid>
+            ))
+          ) : (
+            <Grid item xs={12}>
+              <Typography align="center" py={10} color="text.secondary">
+                No items found
+              </Typography>
+            </Grid>
+          )}
         </Grid>
 
-        <Pagination
-          count={Math.ceil(totalProducts / limit)}
-          page={currentPage}
-          onChange={handlePageChange}
-          sx={{
-            mt: 5,
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-        />
+        {totalCount > filters.limit && (
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 6 }}>
+            <Pagination
+              count={Math.ceil(totalCount / filters.limit)}
+              page={filters.page}
+              onChange={handlePageChange}
+              color="primary"
+              size="large"
+            />
+          </Box>
+        )}
       </Container>
     </>
   );

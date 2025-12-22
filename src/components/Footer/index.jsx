@@ -1,13 +1,28 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Container, Typography, IconButton, Box } from '@mui/material';
+import { Container, Typography, IconButton, Box, Link } from '@mui/material';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import YouTubeIcon from '@mui/icons-material/YouTube';
+import CreditCardIcon from '@mui/icons-material/CreditCard';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import PaymentsIcon from '@mui/icons-material/Payments';
 
 import HomeLink from '@/elements/HomeLink';
 
 const Footer = () => {
+  const supportLinks = [
+    { text: 'FAQ', to: '/faq' },
+    { text: 'Terms of Use', to: '/terms' },
+    { text: 'Privacy Policy', to: '/privacy' },
+  ];
+
+  const shopLinks = [
+    { text: 'My Account', to: '/login' },
+    { text: 'Products', to: '/products?page=1' },
+    { text: 'Cart', to: '/cart' },
+  ];
+
   return (
     <Container
       maxWidth="lg"
@@ -21,6 +36,8 @@ const Footer = () => {
           display: 'flex',
           justifyContent: 'space-between',
           padding: '60px 20px',
+          flexWrap: 'wrap',
+          gap: 4,
         }}
       >
         <Box
@@ -31,7 +48,6 @@ const Footer = () => {
           }}
         >
           <HomeLink />
-
           <Box sx={{ display: 'flex', gap: 1, marginTop: 1 }}>
             <IconButton href="#" aria-label="Facebook">
               <FacebookIcon />
@@ -45,142 +61,68 @@ const Footer = () => {
           </Box>
         </Box>
 
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
             Support
           </Typography>
-          <RouterLink
-            to="/faq"
-            style={{ textDecoration: 'none', margin: '5px 0' }}
-            sx={{
-              '&:hover': {
-                textDecoration: 'underline',
-              },
-            }}
-          >
-            <Typography
+          {supportLinks.map(({ text, to }) => (
+            <Link
+              key={text}
+              component={RouterLink}
+              to={to}
               variant="body2"
               sx={{
+                mb: 1,
                 color: 'black',
+                textDecoration: 'none',
                 '&:hover': { textDecoration: 'underline' },
               }}
             >
-              FAQ
-            </Typography>
-          </RouterLink>
-          <RouterLink
-            to="/terms"
-            style={{ textDecoration: 'none', margin: '5px 0' }}
-            sx={{
-              '&:hover': {
-                textDecoration: 'underline',
-              },
-            }}
-          >
-            <Typography
-              variant="body2"
-              sx={{
-                color: 'black',
-                '&:hover': { textDecoration: 'underline' },
-              }}
-            >
-              Terms of Use
-            </Typography>
-          </RouterLink>
-          <RouterLink
-            to="/privacy"
-            style={{ textDecoration: 'none', margin: '5px 0' }}
-            sx={{
-              '&:hover': {
-                textDecoration: 'underline',
-              },
-            }}
-          >
-            <Typography
-              variant="body2"
-              sx={{
-                color: 'black',
-                '&:hover': { textDecoration: 'underline' },
-              }}
-            >
-              Privacy Policy
-            </Typography>
-          </RouterLink>
+              {text}
+            </Link>
+          ))}
         </Box>
 
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
             Shop
           </Typography>
-          <RouterLink
-            to="/account"
-            style={{ textDecoration: 'none', margin: '5px 0' }}
-            sx={{
-              '&:hover': {
-                textDecoration: 'underline',
-              },
-            }}
-          >
-            <Typography
+          {shopLinks.map(({ text, to }) => (
+            <Link
+              key={text}
+              component={RouterLink}
+              to={to}
               variant="body2"
               sx={{
+                mb: 1,
                 color: 'black',
+                textDecoration: 'none',
                 '&:hover': { textDecoration: 'underline' },
               }}
             >
-              My Account
-            </Typography>
-          </RouterLink>
-          <RouterLink
-            to="/products?page=1"
-            style={{ textDecoration: 'none', margin: '5px 0' }}
+              {text}
+            </Link>
+          ))}
+        </Box>
+
+        <Box sx={{ display: 'flex', flexDirection: 'column', minWidth: 150 }}>
+          <Typography
+            variant="h6"
             sx={{
-              '&:hover': {
-                textDecoration: 'underline',
-              },
+              fontWeight: 'bold',
+              mb: 2,
             }}
           >
-            <Typography
-              variant="body2"
-              sx={{
-                color: 'black',
-                '&:hover': { textDecoration: 'underline' },
-              }}
-            >
-              Products
-            </Typography>
-          </RouterLink>
-          <RouterLink
-            to="/cart"
-            style={{ textDecoration: 'none', margin: '5px 0' }}
-            sx={{
-              '&:hover': {
-                textDecoration: 'underline',
-              },
-            }}
-          >
-            <Typography
-              variant="body2"
-              sx={{
-                color: 'black',
-                '&:hover': { textDecoration: 'underline' },
-              }}
-            >
-              Cart
-            </Typography>
-          </RouterLink>
+            Accepted Payments
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 2, color: 'text.secondary' }}>
+            <CreditCardIcon titleAccess="Visa / Mastercard" />
+            <AccountBalanceWalletIcon titleAccess="American Express" />
+            <PaymentsIcon titleAccess="Cash / Local Payments" />
+          </Box>
         </Box>
       </Box>
+
       <Typography
         variant="body2"
         textAlign="center"

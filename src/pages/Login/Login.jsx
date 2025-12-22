@@ -6,7 +6,7 @@ import LoginForm from '@/components/LoginForm';
 const Login = () => {
   return (
     <>
-      <AppBreadcrumbs items={['Log in']} />;
+      <AppBreadcrumbs items={['Login']} />;
       <LoginForm />
     </>
   );

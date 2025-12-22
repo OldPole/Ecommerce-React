@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Person, Search, ShoppingCart } from '@mui/icons-material';
+import { Person, ShoppingCart } from '@mui/icons-material';
 import {
   AppBar,
   Badge,
@@ -8,8 +8,6 @@ import {
   Button,
   Container,
   IconButton,
-  InputAdornment,
-  TextField,
   Toolbar,
 } from '@mui/material';
 
@@ -40,26 +38,13 @@ const Header = () => {
           </Box>
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <TextField
-              size="small"
-              placeholder="Search products"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Search />
-                  </InputAdornment>
-                ),
-                sx: { bgcolor: 'grey.50', borderRadius: 1, width: 250 },
-              }}
-            />
-
             <IconButton component={RouterLink} to="/cart">
               <Badge badgeContent={0} color="primary">
                 <ShoppingCart />
               </Badge>
             </IconButton>
 
-            <IconButton component={RouterLink} to="/signup">
+            <IconButton component={RouterLink} to="/login">
               <Person />
             </IconButton>
           </Box>
