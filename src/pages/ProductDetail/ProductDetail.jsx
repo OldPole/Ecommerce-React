@@ -7,6 +7,7 @@ import {
   Box,
   Button,
   Rating,
+  Skeleton,
   CardMedia,
   Chip,
 } from '@mui/material';
@@ -19,8 +20,21 @@ import { useGetProductByIdQuery } from '@/api/productsApi';
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const { data: product } = useGetProductByIdQuery(id);
+  const { data: product, isLoading, isError } = useGetProductByIdQuery(id);
   const [activeImage, setActiveImage] = useState(0);
+
+  if (isLoading)
+    return (
+      <Container sx={{ py: '40px' }}>
+        <Skeleton variant="rectangular" height={400} />
+      </Container>
+    );
+
+  if (isError) {
+    alert('Ошибка при загрузке товара');
+  }
+
+  if (!product) return null;
 
   return (
     <Container maxWidth="md" sx={{ py: '40px' }}>
