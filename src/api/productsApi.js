@@ -8,6 +8,9 @@ export const productsApi = createApi({
     getCategories: builder.query({
       query: () => 'products/category-list',
     }),
+    getProductById: builder.query({
+      query: id => `products/${id}`,
+    }),
     getProducts: builder.query({
       query: ({ search, category, sortBy, order, limit = 9, skip = 0 }) => {
         let queryStr = `limit=${limit}&skip=${skip}`;
@@ -23,4 +26,8 @@ export const productsApi = createApi({
   }),
 });
 
-export const { useGetProductsQuery, useGetCategoriesQuery } = productsApi;
+export const {
+  useGetProductsQuery,
+  useGetCategoriesQuery,
+  useGetProductByIdQuery,
+} = productsApi;
