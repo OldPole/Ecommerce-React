@@ -10,6 +10,7 @@ import {
   Skeleton,
   CardMedia,
   Chip,
+  Alert,
 } from '@mui/material';
 import {
   ShoppingBagOutlined,
@@ -31,7 +32,13 @@ const ProductDetail = () => {
     );
 
   if (isError) {
-    alert('Ошибка при загрузке товара');
+    return (
+      <Container sx={{ py: '40px' }}>
+        <Alert severity="error" variant="outlined">
+          Ошибка при загрузке товара
+        </Alert>
+      </Container>
+    );
   }
 
   if (!product) return null;
