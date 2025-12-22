@@ -3,7 +3,6 @@ import { useSearchParams } from 'react-router-dom';
 import { Grid, Container, Pagination, Box, Typography } from '@mui/material';
 import AppBreadcrumbs from '@/components/AppBreadcrumbs';
 import ProductBlock from '@/components/ProductBlock';
-import SkeletonProduct from '@/components/ProductBlock/Skeleton';
 import ProductToolbar from '@/components/ProductToolbar';
 import { useGetProductsQuery } from '@/api/productsApi';
 
@@ -76,35 +75,14 @@ const Products = () => {
       <AppBreadcrumbs items={['Products']} />
       <Container fixed sx={{ pb: 8 }}>
         <ProductToolbar filters={filters} onFilterChange={handleFilterChange} />
-
         <Grid container spacing={4} justifyContent="center">
-          {isLoading ? (
-            [...Array(filters.limit)].map((_, i) => (
-              <Grid
-                item
-                xs={12}
-                sm={6}
-                md={4}
-                key={i}
-                sx={{ display: 'flex', justifyContent: 'center' }}
-              >
-                <SkeletonProduct />
-              </Grid>
-            ))
-          ) : products.length > 0 ? (
-            products.map(product => (
-              <Grid
-                item
-                xs={12}
-                sm={6}
-                md={4}
-                key={product.id}
-                sx={{ display: 'flex', justifyContent: 'center' }}
-              >
-                <ProductBlock {...product} />
-              </Grid>
-            ))
-          ) : (
+          <ProductBlock
+            products={products}
+            isLoading={isLoading}
+            limit={filters.limit}
+          />
+
+          {!isLoading && products.length === 0 && (
             <Grid item xs={12}>
               <Typography align="center" py={10} color="text.secondary">
                 No items found

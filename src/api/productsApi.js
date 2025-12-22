@@ -9,8 +9,9 @@ export const productsApi = createApi({
       query: () => 'products/category-list',
     }),
     getProducts: builder.query({
-      query: ({ search, category, sortBy, order, limit, skip }) => {
+      query: ({ search, category, sortBy, order, limit = 9, skip = 0 }) => {
         let queryStr = `limit=${limit}&skip=${skip}`;
+
         if (sortBy) queryStr += `&sortBy=${sortBy}&order=${order || 'asc'}`;
 
         if (search) return `products/search?q=${search}&${queryStr}`;
